@@ -3,15 +3,10 @@
 Item.allItems = [];
 
 
-//PLAY
 var totClicks;
 totClicks=0;
-//END PLAY
-
-
 
 var resultsList = document.getElementById('results_list');
-
 var allImages = [img1, img2, img3];
 
 function Item(name, displayName, filePath) {
@@ -47,7 +42,7 @@ var usb = new Item('usb','USB','img/usb.gif');
 var waterCan = new Item('water_can','Water Can','img/water-can.jpg');
 var wineGlass = new Item('wine_glass','Wine Glass','img/wine-glass.jpg');
 
-console.log('START')
+
 document.getElementById('img1').addEventListener('click', function(){
   chooseItem(event.target.id);
 });
@@ -58,16 +53,6 @@ document.getElementById('img3').addEventListener('click', function(){
   chooseItem(event.target.id);
 });
 
-function endMouseclick(e){
-  if (totClicks === 25 ){
-    console.log ('f************************uck = 25');
-    break
-    document.getElementById('img1').removeEventListener('click', chooseItem(event.target.id));
-    document.getElementById('img2').removeEventListener('click', chooseItem(event.target.id));
-    document.getElementById('img3').removeEventListener('click', chooseItem(event.target.id));
-    console.log('END REMOVE EVENT LISTENER');
-  }
-}
 
 // event.target.id is the img# receved from user click, then it is sent through the ChoosItem() function as var inTarget
 function chooseItem(inTarget){
@@ -81,10 +66,11 @@ function chooseItem(inTarget){
       break;
     }
   }
-  refreshItems();
-  console.log('WITHIN FUNCTION ChooseItem');
+  if (totClicks !== 26) {
+    refreshItems();
+  }
 }
-//console.log('ShowCount = ' + Item.showCount);
+
 function displayNewItem(inImg){
   var canDisplay = false;
   while (canDisplay === false) {
@@ -93,27 +79,19 @@ function displayNewItem(inImg){
       canDisplay = true;
       Item.allItems[randomPic].displayedAs = inImg.id;
       //how does javascript know inImg is an HTML object, where is .id and .src defined in Javascript??
-      //console.log('inImg = ' + inImg)
-      //console.log('inImg.id = ' + inImg.id)
       Item.allItems[randomPic].showCount++;
       inImg.src = Item.allItems[randomPic].filePath;
-      //console.log(Item.allItems[randomPic]);
     }
   }
 }
 
 function refreshItems() {
-  //first set everything to undisplayed
   var totalClicks = 0;
   for (var itemCounter = 0; itemCounter < Item.allItems.length; itemCounter++){
     if (Item.allItems[itemCounter].displayedAs === 'last') {
       Item.allItems[itemCounter].displayedAs = 'none';
-      console.log('Item.allItems[itemCounter].displayedAs.slice(0,3) BEFORE LOOP = ' + Item.allItems[itemCounter].displayedAs.slice(0,3));
-    } //else if (Item.allItems[itemCounter].displayedAs.slice(0,3) === 'img') {
+    }
     else if (Item.allItems[itemCounter].displayedAs !== 'none') {
-      console.log(totalClicks);
-      console.log('Item.allItems[itemCounter].displayedAs ' + Item.allItems[itemCounter].displayedAs);
-      console.log('Item.allItems[itemCounter].displayedAs.slice(0,3) INSIDE LOOP = ' + Item.allItems[itemCounter].displayedAs.slice(0,3));
       Item.allItems[itemCounter].displayedAs = 'last';
     }
     totalClicks = totalClicks + Item.allItems[itemCounter].clickCount;
@@ -121,20 +99,13 @@ function refreshItems() {
   }
   for (var imageCounter = 0; imageCounter < allImages.length; imageCounter++) {
     if (totalClicks === 25) {
-      console.log('totalClicks = 25? = ' + totalClicks);
-      console.log('INSIDE LOOP ##################');
-      endMouseclick();
-      
-      //img1.removeEventListener('click', chooseItem(event.target.id));
-      //allImages[imageCounter].removeEventListener('click', function(){
-      //  chooseItem(event.target.id);
-      //});
+      console.log('totalClicks = ' + totalClicks);
     } else {
       displayNewItem(allImages[imageCounter]);
     }
   }
   if (totalClicks === 25) {
-    console.log('END');
+    totClicks++;
     displayResults();
   }
 }
@@ -146,8 +117,7 @@ function displayResults(){
     resultsNode.appendChild(resultsText);
     resultsList.appendChild(resultsNode);
   }
+
 }
-
 refreshItems();
-
 
