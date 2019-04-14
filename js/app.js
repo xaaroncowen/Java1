@@ -6,118 +6,122 @@ Item.allItems = [];
 var totClicks;
 totClicks=0;
 
-var resultsList = document.getElementById('results_list');
-var allImages = [img1, img2, img3];
+//var pic1;
+//var pic2;
+//var pic3;
 
-function Item(name, displayName, filePath) {
+var resultsList = document.getElementById('results_list');
+
+var allImages = [pic1, pic2, pic3];
+
+function Item(name, path) {
   this.name = name;
-  this.displayName = displayName;
-  this.filePath = filePath;
+  this.path = path;
   this.showCount = 0;
   this.clickCount = 0;
-  this.displayedAs = 'none';
+  this.displayedStatus = 'none';
   Item.allItems.push(this);
 }
 
-//initialize all the images
+//push name and path data into Item
 
-var bag = new Item('bag','Bag','img/bag.jpg');
-var banana = new Item('banana', 'Banana', 'img/banana.jpg');
-var bathroom = new Item('bathroom','Bathroom', 'img/bathroom.jpg');
-var boots = new Item('boots', 'Boots', 'img/boots.jpg');
-var breakfast = new Item('breakfast', 'Breakfast', 'img/breakfast.jpg');
-var bubblegum = new Item('bubblegum','Bubble Gum', 'img/bubblegum.jpg');
-var chair = new Item('chair', 'Chair', 'img/chair.jpg');
-var cthulhu = new Item('cthulhu','Cthulhu','img/cthulhu.jpg');
-var dogDuck = new Item('dog_duck','Dog Duck','img/dog-duck.jpg');
-var dragon = new Item('dragon','Dragon','img/dragon.jpg');
-var pen = new Item('pen','Pen','img/pen.jpg');
-var petSweep = new Item('pet_sweep','Pet Sweep','img/pet-sweep.jpg');
-var scissors = new Item('scissors', 'Scissors','img/scissors.jpg');
-var shark = new Item('shark','Shark','img/shark.jpg');
-var sweep = new Item('sweep','Sweep','img/sweep.png');
-var tauntaun = new Item('tauntaun','Tauntaun','img/tauntaun.jpg');
-var unicorn = new Item('unicorn','Unicorn','img/unicorn.jpg');
-var usb = new Item('usb','USB','img/usb.gif');
-var waterCan = new Item('water_can','Water Can','img/water-can.jpg');
-var wineGlass = new Item('wine_glass','Wine Glass','img/wine-glass.jpg');
+new Item('Bag','img/bag.jpg');
+new Item('Banana', 'img/banana.jpg');
+new Item('Bathroom', 'img/bathroom.jpg');
+new Item('Boots', 'img/boots.jpg');
+new Item('Breakfast', 'img/breakfast.jpg');
+new Item('Bubble Gum', 'img/bubblegum.jpg');
+new Item('Chair', 'img/chair.jpg');
+new Item('Cthulhu','img/cthulhu.jpg');
+new Item('Dog Duck','img/dog-duck.jpg');
+new Item('Dragon','img/dragon.jpg');
+new Item('Pen','img/pen.jpg');
+new Item('Pet Sweep','img/pet-sweep.jpg');
+new Item('Scissors','img/scissors.jpg');
+new Item('Shark','img/shark.jpg');
+new Item('Sweep','img/sweep.png');
+new Item('Tauntaun','img/tauntaun.jpg');
+new Item('Unicorn','img/unicorn.jpg');
+new Item('USB','img/usb.gif');
+new Item('Water Can','img/water-can.jpg');
+new Item('Wine Glass','img/wine-glass.jpg');
 
 
-document.getElementById('img1').addEventListener('click', function(){
+document.getElementById('pic1').addEventListener('click', function(){
   chooseItem(event.target.id);
 });
-document.getElementById('img2').addEventListener('click', function(){
+document.getElementById('pic2').addEventListener('click', function(){
   chooseItem(event.target.id);
 });
-document.getElementById('img3').addEventListener('click', function(){
+document.getElementById('pic3').addEventListener('click', function(){
   chooseItem(event.target.id);
 });
 
 
-// event.target.id is the img# receved from user click, then it is sent through the ChoosItem() function as var inTarget
-function chooseItem(inTarget){
+// event.target.id is the img# receved from user click, then it is sent through the chooseItem() function as var chosenItem
+function chooseItem(chosenItem){
 
-  for (var chooseCounter = 0; chooseCounter < Item.allItems.length; chooseCounter++) {
-    if (Item.allItems[chooseCounter].displayedAs === inTarget) {
-      //console.log('Item.allItems[chooseCounter].displayedAs = ' + Item.allItems[chooseCounter].displayedAs);
-      //console.log('chooseCounter = ' + chooseCounter);
-      Item.allItems[chooseCounter].clickCount++;
-      //console.log('Item.allItems[chooseCounter].clickCount = ' + Item.allItems[chooseCounter].clickCount);
+  for (var i = 0; i < Item.allItems.length; i++) {
+    if (Item.allItems[i].displayedStatus === chosenItem) {
+      //console.log('Item.allItems[i].displayedStatus = ' + Item.allItems[i].displayedStatus);
+      //console.log('i = ' + i);
+      Item.allItems[i].clickCount++;
+      //console.log('Item.allItems[i].clickCount = ' + Item.allItems[i].clickCount);
       break;
     }
   }
+  //prevents refreshItems from being called within chooseItem function which fixed looping problem after 25th click has been made where it continuously called showresults()
   if (totClicks !== 26) {
     refreshItems();
   }
 }
 
-function displayNewItem(inImg){
-  var canDisplay = false;
-  while (canDisplay === false) {
+function showNewItem(inImg){
+  var display = false;
+  while (display === false) {
     var randomPic = Math.floor(Math.random() * Item.allItems.length);
-    if (Item.allItems[randomPic].displayedAs === 'none') {
-      canDisplay = true;
-      Item.allItems[randomPic].displayedAs = inImg.id;
+    if (Item.allItems[randomPic].displayedStatus === 'none') {
+      display = true;
+      Item.allItems[randomPic].displayedStatus = inImg.id;
       //how does javascript know inImg is an HTML object, where is .id and .src defined in Javascript??
       Item.allItems[randomPic].showCount++;
-      inImg.src = Item.allItems[randomPic].filePath;
+      inImg.src = Item.allItems[randomPic].path;
     }
   }
 }
 
 function refreshItems() {
   var totalClicks = 0;
-  for (var itemCounter = 0; itemCounter < Item.allItems.length; itemCounter++){
-    if (Item.allItems[itemCounter].displayedAs === 'last') {
-      Item.allItems[itemCounter].displayedAs = 'none';
+  for (var j = 0; j < Item.allItems.length; j++){
+    if (Item.allItems[j].displayedStatus === 'last') {
+      Item.allItems[j].displayedStatus = 'none';
     }
-    else if (Item.allItems[itemCounter].displayedAs !== 'none') {
-      Item.allItems[itemCounter].displayedAs = 'last';
+    else if (Item.allItems[j].displayedStatus !== 'none') {
+      Item.allItems[j].displayedStatus = 'last';
     }
-    totalClicks = totalClicks + Item.allItems[itemCounter].clickCount;
-    totClicks=totalClicks;
+    totalClicks = totalClicks + Item.allItems[j].clickCount;
+    totClicks = totalClicks;
   }
-  for (var imageCounter = 0; imageCounter < allImages.length; imageCounter++) {
+  for (var k = 0; k < allImages.length; k++) {
     if (totalClicks === 25) {
-      console.log('totalClicks = ' + totalClicks);
+      console.log('totalClicks = 25? = ' + totalClicks);
     } else {
-      displayNewItem(allImages[imageCounter]);
+      showNewItem(allImages[k]);
     }
   }
   if (totalClicks === 25) {
     totClicks++;
-    displayResults();
+    showResults();
   }
 }
 
-function displayResults(){
-  for (var resultsCounter = 0; resultsCounter < Item.allItems.length; resultsCounter++) {
-    var resultsText = document.createTextNode(`${Item.allItems[resultsCounter].clickCount} votes for ${Item.allItems[resultsCounter].displayName}`);
+function showResults(){
+  for (var i = 0; i < Item.allItems.length; i++) {
+    var resultsText = document.createTextNode(`${Item.allItems[i].clickCount} Vote(s) for ${Item.allItems[i].name}`);
     var resultsNode = document.createElement('li');
     resultsNode.appendChild(resultsText);
     resultsList.appendChild(resultsNode);
   }
-
 }
 refreshItems();
 
